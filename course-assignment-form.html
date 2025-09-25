@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ders Programı Atama Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .assignment-section {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-panel {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .form-panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group select:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .time-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 14px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+        }
+        
+        .btn-danger {
+            background: #f56565;
+        }
+        
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+        
+        .schedule-view {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .schedule-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .schedule-table th {
+            background: #f8f9fa;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            color: #555;
+            border: 1px solid #dee2e6;
+            font-size: 13px;
+        }
+        
+        .schedule-table td {
+            border: 1px solid #dee2e6;
+            padding: 4px;
+            text-align: center;
+            height: 35px;
+            font-size: 11px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .schedule-table td:hover:not(.time-cell):not(.lunch-break) {
+            background: #f0f0f0;
+        }
+        
+        .time-cell {
+            background: #f8f9fa;
+            font-weight: 600;
+            font-size: 11px;
+            color: #666;
+            width: 70px;
+        }
+        
+        .lunch-break {
+            background: #fff3cd;
+            font-weight: 600;
+            color: #856404;
+        }
+        
+        .course-block {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 4px;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: move;
+        }
+        
+        .course-block:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .course-name {
+            font-weight: 600;
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+        
+        .course-info {
+            font-size: 9px;
+            opacity: 0.8;
+        }
+        
+        .selected-cell {
+            background: #e3f2fd !important;
+            border: 2px solid #2196F3 !important;
+        }
+        
+        .assignments-list {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .assignments-list h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .assignment-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .assignment-item:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .assignment-details {
+            flex: 1;
+        }
+        
+        .assignment-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            animation: slideIn 0.3s;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .info-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        .conflict-warning {
+            background: #ffebee !important;
+            border: 2px solid #f44336 !important;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .tab-button:hover:not(.active) {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Ders Programı Atama Sistemi</h1>
+        
+        <div class="assignment-section">
+            <!-- Sol Panel - Atama Formu -->
+            <div class="form-panel">
+                <h2>📝 Ders Ataması</h2>
+                
+                <div class="form-group">
+                    <label for="ogretimElemani">1️⃣ Öğretim Elemanını Seç:</label>
+                    <select id="ogretimElemani">
+                        <option value="">Seçiniz...</option>
+                        <option value="AA">A.A.</option>
+                        <option value="EA">E.A.</option>
+                        <option value="EY">E.Y.</option>
+                        <option value="MD">M.D.</option>
+                        <option value="MA">M.A.</option>
+                        <option value="MuD">Mu.D.</option>
+                        <option value="OKS">O.K.Ş.</option>
+                        <option value="SB">S.B.</option>
+                        <option value="SE">S.E.</option>
+                        <option value="SD">S.D.</option>
+                        <option value="TD">T.D.</option>
+                        <option value="UT">U.T.</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bolum">2️⃣ Bölüm Seç:</label>
+                    <select id="bolum" disabled>
+                        <option value="">Önce öğretim elemanı seçin</option>
+                        <option value="bilgisayar">Bilgisayar Teknolojileri</option>
+                        <option value="elektrik">Elektrik ve Enerji</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="program">3️⃣ Program Seç:</label>
+                    <select id="program" disabled>
+                        <option value="">Önce bölüm seçin</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sinif">4️⃣ Sınıf Seç:</label>
+                    <select id="sinif" disabled>
+                        <option value="">Önce program seçin</option>
+                        <option value="1">1. Sınıf</option>
+                        <option value="2">2. Sınıf</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ders">5️⃣ Ders Seç:</label>
+                    <select id="ders" disabled>
+                        <option value="">Önce sınıf seçin</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="derslik">6️⃣ Derslik Seç:</label>
+                    <select id="derslik" disabled>
+                        <option value="">Önce ders seçin</option>
+                        <option value="D1">Derslik 1</option>
+                        <option value="D2">Derslik 2</option>
+                        <option value="BL1">Bilgisayar Lab. 1</option>
+                        <option value="BL2">Bilgisayar Lab. 2</option>
+                        <option value="EL">Elektronik Lab.</option>
+                        <option value="HPL">Hidrolik ve Pnömatik Lab.</option>
+                        <option value="KS">Konferans Salonu</option>
+                        <option value="DO">Danışman Odası</option>
+                        <option value="YB">Yerleşke Bahçesi</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>7️⃣ Gün ve Saat Seç:</label>
+                    <div style="margin-top: 10px;">
+                        <label for="gun" style="font-weight: normal;">Gün:</label>
+                        <select id="gun" disabled style="margin-bottom: 10px;">
+                            <option value="">Seçiniz...</option>
+                            <option value="1">Pazartesi</option>
+                            <option value="2">Salı</option>
+                            <option value="3">Çarşamba</option>
+                            <option value="4">Perşembe</option>
+                            <option value="5">Cuma</option>
+                        </select>
+                    </div>
+                    <div class="time-selection">
+                        <div>
+                            <label style="font-weight: normal;">Başlangıç:</label>
+                            <select id="baslangic" disabled>
+                                <option value="">Seçiniz...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-weight: normal;">Bitiş:</label>
+                            <select id="bitis" disabled>
+                                <option value="">Seçiniz...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" onclick="ekle()" id="ekleBtn" disabled>
+                    ➕ EKLE
+                </button>
+                
+                <button class="btn btn-danger" onclick="temizle()">
+                    🔄 Temizle
+                </button>
+                
+                <div id="statusMessage" class="status-message"></div>
+                
+                <!-- Kriter/Kısıt Ekleme Bölümü -->
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #dee2e6;">
+                    <h3 style="color: #f56565; font-size: 1.1em; margin-bottom: 15px;">
+                        ⚠️ Kısıt/Kriter Ekle
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label for="kisitOgretmen">Öğretim Elemanı:</label>
+                        <select id="kisitOgretmen">
+                            <option value="">Seçiniz...</option>
+                            <option value="AA">A.A.</option>
+                            <option value="EA">E.A.</option>
+                            <option value="EY">E.Y.</option>
+                            <option value="MD">M.D.</option>
+                            <option value="MA">M.A.</option>
+                            <option value="MuD">Mu.D.</option>
+                            <option value="OKS">O.K.Ş.</option>
+                            <option value="SB">S.B.</option>
+                            <option value="SE">S.E.</option>
+                            <option value="SD">S.D.</option>
+                            <option value="TD">T.D.</option>
+                            <option value="UT">U.T.</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kisitGun">Gün:</label>
+                        <select id="kisitGun">
+                            <option value="">Seçiniz...</option>
+                            <option value="1">Pazartesi</option>
+                            <option value="2">Salı</option>
+                            <option value="3">Çarşamba</option>
+                            <option value="4">Perşembe</option>
+                            <option value="5">Cuma</option>
+                            <option value="0">Tüm Günler</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kisitSaat">Saat:</label>
+                        <input type="time" id="kisitSaat" min="08:30" max="18:00" step="1800">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kisitTur">Kısıt Türü:</label>
+                        <select id="kisitTur">
+                            <option value="">Seçiniz...</option>
+                            <option value="once">Bu saatten ÖNCE ders koyma</option>
+                            <option value="sonra">Bu saatten SONRA ders koyma</option>
+                            <option value="tam">TAM bu saatte ders koyma</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" style="background: #f56565;" onclick="kisitEkle()">
+                        ⛔ Kısıt Ekle
+                    </button>
+                    
+                    <div id="kisitlarListesi" style="margin-top: 15px; padding: 10px; background: #fff5f5; border-radius: 8px; display: none;">
+                        <h4 style="color: #c53030; font-size: 0.9em; margin-bottom: 10px;">📋 Tanımlı Kısıtlar:</h4>
+                        <div id="kisitlarIcerik"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sağ Panel - Program Görünümü -->
+            <div class="schedule-view">
+                <div class="schedule-header">
+                    <h3>📅 Haftalık Program</h3>
+                    <div>
+                        <select id="viewType" onchange="changeView()" style="padding: 8px; border-radius: 5px; border: none;">
+                            <option value="program">Program Görünümü</option>
+                            <option value="derslik">Derslik Görünümü</option>
+                            <option value="ogretmen">Öğretmen Görünümü</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="tab-buttons" id="tabButtons">
+                    <!-- Dinamik olarak doldurulacak -->
+                </div>
+                
+                <div id="scheduleTableContainer">
+                    <table class="schedule-table" id="scheduleTable">
+                        <thead>
+                            <tr>
+                                <th>Saat</th>
+                                <th>Pazartesi</th>
+                                <th>Salı</th>
+                                <th>Çarşamba</th>
+                                <th>Perşembe</th>
+                                <th>Cuma</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleBody">
+                            <!-- Dinamik olarak doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Atama Listesi -->
+        <div class="assignments-list">
+            <h3>📋 Yapılan Atamalar</h3>
+            <div id="assignmentsList">
+                <p style="color: #999;">Henüz atama yapılmadı.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Veri yapıları
+        const programlar = {
+            'bilgisayar': [
+                { value: 'BP', text: 'Bilgisayar Programcılığı' }
+            ],
+            'elektrik': [
+                { value: 'ET', text: 'Elektronik Teknolojisi' },
+                { value: 'EE', text: 'Elektrik Enerjisi Üretim İletim Dağıtım' },
+                { value: 'YE', text: 'Yenilenebilir Enerji Teknikerliği' }
+            ]
+        };
+        
+        const dersler = {
+            'BP-1': [
+                'Atatürk İlkeleri ve İnkılap Tarihi I',
+                'Bilgisayar Donanımı ve Ağ',
+                'Beden Eğitimi',
+                'Grafik ve Animasyon',
+                'Matematik',
+                'Programlama Temelleri',
+                'Temel Yabancı Dil (İngilizce)',
+                'Türk Dili I',
+                'Web Tasarım Temelleri'
+            ],
+            'BP-2': [
+                'Bilgisayar Destekli Çizim',
+                'Görüntü İşlemenin Temelleri',
+                'İşletme Yönetimi I',
+                'Mikrobilgisayar ve Assembler',
+                'Nesne Tabanlı Programlama',
+                'Sunucu İşletim Sistemleri',
+                'Temel Yabancı Dil (İngilizce)',
+                'Veri Tabanı Uygulamaları',
+                'Dönem Projesi'
+            ],
+            'ET-1': [
+                'Doğru Akım Devre Analizi',
+                'Mikrobilgisayar ve Assembler',
+                'Sayısal Elektronik',
+                'Temel Elektronik',
+                'Türk Dili I',
+                'Temel Yabancı Dil (İngilizce)',
+                'Bilgisayar Destekli Çizim'
+            ],
+            'ET-2': [
+                'Elektrik Motorları ve Sürücüleri',
+                'Güç Elektroniği',
+                'Programlanabilir Denetleyiciler',
+                'Dönem Projesi',
+                'Elektrik Elektronik Ölçme',
+                'Elektrik Enerjisi Ürt. İlt. ve Dağ.',
+                'Temel Enerji Teknolojileri',
+                'İşletme Yönetimi I'
+            ],
+            'EE-1': [
+                'Atatürk İlkeleri ve İnkılap Tarihi I',
+                'Bilgi ve İletişim Teknolojileri I',
+                'Doğru Akım Devre Analizi',
+                'Elektrik Elektronik Ölçme',
+                'Matematik',
+                'Temel Elektronik',
+                'Temel Yabancı Dil (İngilizce)',
+                'Türk Dili I',
+                'Beden Eğitimi'
+            ],
+            'YE-1': [
+                'Atatürk İlkeleri ve İnkılap Tarihi I',
+                'Bilgi ve İletişim Teknolojileri I',
+                'Doğru Akım Devre Analizi',
+                'Elektrik Elektronik Ölçme',
+                'Elektrik Enerjisi Ürt. İlt. ve Dağ.',
+                'Matematik',
+                'Temel Elektronik',
+                'Temel Yabancı Dil (İngilizce)',
+                'Türk Dili I',
+                'Beden Eğitimi'
+            ]
+        };
+        
+        const saatler = [
+            '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', 
+            '11:30', '12:00', '14:00', '14:30', '15:00', '15:30', 
+            '16:00', '16:30', '17:00', '17:30'
+        ];
+        
+        let atamalar = [];
+        let kisitlar = [];
+        let currentView = 'program';
+        let currentTab = 'BP-1';
+        
+        // Form kontrolleri
+        document.getElementById('ogretimElemani').addEventListener('change', function() {
+            const bolumSelect = document.getElementById('bolum');
+            if (this.value) {
+                bolumSelect.disabled = false;
+                bolumSelect.value = '';
+                resetFields(['program', 'sinif', 'ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+            } else {
+                resetFields(['bolum', 'program', 'sinif', 'ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+            }
+        });
+        
+        document.getElementById('bolum').addEventListener('change', function() {
+            const programSelect = document.getElementById('program');
+            if (this.value) {
+                programSelect.disabled = false;
+                programSelect.innerHTML = '<option value="">Seçiniz...</option>';
+                programlar[this.value].forEach(p => {
+                    programSelect.innerHTML += `<option value="${p.value}">${p.text}</option>`;
+                });
+                resetFields(['sinif', 'ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+            } else {
+                resetFields(['program', 'sinif', 'ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+            }
+        });
+        
+        document.getElementById('program').addEventListener('change', function() {
+            const sinifSelect = document.getElementById('sinif');
+            if (this.value) {
+                sinifSelect.disabled = false;
+                resetFields(['ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+            } else {
+                resetFields(['sinif', 'ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+            }
+        });
+        
+        document.getElementById('sinif').addEventListener('change', function() {
+            const dersSelect = document.getElementById('ders');
+            const programKod = document.getElementById('program').value;
+            const sinif = this.value;
+            
+            if (sinif) {
+                const dersKey = `${programKod}-${sinif}`;
+                dersSelect.disabled = false;
+                dersSelect.innerHTML = '<option value="">Seçiniz...</option>';
+                
+                if (dersler[dersKey]) {
+                    dersler[dersKey].forEach(d => {
+                        dersSelect.innerHTML += `<option value="${d}">${d}</option>`;
+                    });
+                }
+                resetFields(['derslik', 'gun', 'baslangic', 'bitis']);
+            } else {
+                resetFields(['ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+            }
+        });
+        
+        document.getElementById('ders').addEventListener('change', function() {
+            const derslikSelect = document.getElementById('derslik');
+            const gunSelect = document.getElementById('gun');
+            
+            if (this.value) {
+                derslikSelect.disabled = false;
+                gunSelect.disabled = false;
+                resetFields(['baslangic', 'bitis']);
+            } else {
+                resetFields(['derslik', 'gun', 'baslangic', 'bitis']);
+            }
+        });
+        
+        document.getElementById('gun').addEventListener('change', function() {
+            const baslangicSelect = document.getElementById('baslangic');
+            const bitisSelect = document.getElementById('bitis');
+            
+            if (this.value) {
+                baslangicSelect.disabled = false;
+                baslangicSelect.innerHTML = '<option value="">Seçiniz...</option>';
+                saatler.forEach(s => {
+                    baslangicSelect.innerHTML += `<option value="${s}">${s}</option>`;
+                });
+            } else {
+                resetFields(['baslangic', 'bitis']);
+            }
+        });
+        
+        document.getElementById('baslangic').addEventListener('change', function() {
+            const bitisSelect = document.getElementById('bitis');
+            const baslangicIndex = saatler.indexOf(this.value);
+            
+            if (this.value) {
+                bitisSelect.disabled = false;
+                bitisSelect.innerHTML = '<option value="">Seçiniz...</option>';
+                
+                // Başlangıç saatinden sonraki saatleri göster
+                for (let i = baslangicIndex + 1; i < saatler.length; i++) {
+                    bitisSelect.innerHTML += `<option value="${saatler[i]}">${saatler[i]}</option>`;
+                }
+                
+                // Ekle butonunu kontrol et
+                checkEkleButton();
+            } else {
+                resetFields(['bitis']);
+            }
+        });
+        
+        document.getElementById('bitis').addEventListener('change', function() {
+            checkEkleButton();
+        });
+        
+        function resetFields(fields) {
+            fields.forEach(field => {
+                const element = document.getElementById(field);
+                element.value = '';
+                element.disabled = true;
+                if (field === 'program' || field === 'ders' || field === 'baslangic' || field === 'bitis') {
+                    element.innerHTML = '<option value="">Önce üstteki alanı seçin</option>';
+                }
+            });
+            document.getElementById('ekleBtn').disabled = true;
+        }
+        
+        function checkEkleButton() {
+            const allFields = ['ogretimElemani', 'bolum', 'program', 'sinif', 'ders', 'derslik', 'gun', 'baslangic', 'bitis'];
+            const allFilled = allFields.every(field => document.getElementById(field).value);
+            document.getElementById('ekleBtn').disabled = !allFilled;
+        }
+        
+        function ekle() {
+            const atama = {
+                ogretimElemani: document.getElementById('ogretimElemani').value,
+                bolum: document.getElementById('bolum').value,
+                program: document.getElementById('program').value,
+                sinif: document.getElementById('sinif').value,
+                ders: document.getElementById('ders').value,
+                derslik: document.getElementById('derslik').value,
+                gun: document.getElementById('gun').value,
+                baslangic: document.getElementById('baslangic').value,
+                bitis: document.getElementById('bitis').value
+            };
+            
+            // Kısıt kontrolü
+            const kisitIhlali = checkKisitlar(atama);
+            if (kisitIhlali) {
+                showMessage(kisitIhlali, 'error');
+                return;
+            }
+            
+            // Çakışma kontrolü
+            const cakisma = checkConflict(atama);
+            if (cakisma) {
+                showMessage(cakisma, 'error');
+                return;
+            }
+            
+            atamalar.push(atama);
+            updateScheduleTable();
+            updateAssignmentsList();
+            showMessage('Ders başarıyla eklendi!', 'success');
+            temizle();
+        }
+        
+        function checkKisitlar(atama) {
+            for (let kisit of kisitlar) {
+                // Bu öğretmen için kısıt var mı?
+                if (kisit.ogretmen === atama.ogretimElemani) {
+                    // Gün kontrolü (0 = tüm günler)
+                    if (kisit.gun === '0' || kisit.gun === atama.gun) {
+                        const kisitSaatIndex = saatler.indexOf(kisit.saat.replace(':', ''));
+                        const baslangicIndex = saatler.indexOf(atama.baslangic);
+                        const bitisIndex = saatler.indexOf(atama.bitis);
+                        
+                        if (kisit.tur === 'once') {
+                            // Bu saatten önce ders koyma
+                            if (baslangicIndex < kisitSaatIndex) {
+                                const gunAdi = kisit.gun === '0' ? 'hiçbir gün' : 
+                                              ['', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'][parseInt(kisit.gun)];
+                                return `⛔ ${atama.ogretimElemani} öğretim elemanı ${gunAdi} ${kisit.saat}'den önce ders veremez!`;
+                            }
+                        } else if (kisit.tur === 'sonra') {
+                            // Bu saatten sonra ders koyma
+                            if (bitisIndex > kisitSaatIndex) {
+                                const gunAdi = kisit.gun === '0' ? 'hiçbir gün' : 
+                                              ['', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'][parseInt(kisit.gun)];
+                                return `⛔ ${atama.ogretimElemani} öğretim elemanı ${gunAdi} ${kisit.saat}'den sonra ders veremez!`;
+                            }
+                        } else if (kisit.tur === 'tam') {
+                            // Tam bu saatte ders koyma
+                            if (baslangicIndex <= kisitSaatIndex && bitisIndex > kisitSaatIndex) {
+                                const gunAdi = kisit.gun === '0' ? 'hiçbir gün' : 
+                                              ['', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'][parseInt(kisit.gun)];
+                                return `⛔ ${atama.ogretimElemani} öğretim elemanı ${gunAdi} ${kisit.saat} saatinde ders veremez!`;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        
+        function kisitEkle() {
+            const ogretmen = document.getElementById('kisitOgretmen').value;
+            const gun = document.getElementById('kisitGun').value;
+            const saat = document.getElementById('kisitSaat').value;
+            const tur = document.getElementById('kisitTur').value;
+            
+            if (!ogretmen || !gun || !saat || !tur) {
+                showMessage('Lütfen tüm kısıt alanlarını doldurun!', 'error');
+                return;
+            }
+            
+            // Aynı kısıt var mı kontrol et
+            const mevcutKisit = kisitlar.find(k => 
+                k.ogretmen === ogretmen && 
+                k.gun === gun && 
+                k.saat === saat && 
+                k.tur === tur
+            );
+            
+            if (mevcutKisit) {
+                showMessage('Bu kısıt zaten tanımlanmış!', 'error');
+                return;
+            }
+            
+            kisitlar.push({
+                ogretmen: ogretmen,
+                gun: gun,
+                saat: saat,
+                tur: tur
+            });
+            
+            updateKisitlarListesi();
+            showMessage('Kısıt başarıyla eklendi!', 'success');
+            
+            // Formu temizle
+            document.getElementById('kisitOgretmen').value = '';
+            document.getElementById('kisitGun').value = '';
+            document.getElementById('kisitSaat').value = '';
+            document.getElementById('kisitTur').value = '';
+        }
+        
+        function updateKisitlarListesi() {
+            const listDiv = document.getElementById('kisitlarListesi');
+            const icerikDiv = document.getElementById('kisitlarIcerik');
+            
+            if (kisitlar.length === 0) {
+                listDiv.style.display = 'none';
+                return;
+            }
+            
+            listDiv.style.display = 'block';
+            icerikDiv.innerHTML = '';
+            
+            kisitlar.forEach((kisit, index) => {
+                const gunAdi = kisit.gun === '0' ? 'Tüm Günler' : 
+                              ['', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'][parseInt(kisit.gun)];
+                const turAciklama = {
+                    'once': 'önce ders yok',
+                    'sonra': 'sonra ders yok',
+                    'tam': 'saatinde ders yok'
+                }[kisit.tur];
+                
+                icerikDiv.innerHTML += `
+                    <div style="background: white; padding: 8px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 12px;">
+                            <strong>${kisit.ogretmen}</strong> - ${gunAdi} - ${kisit.saat} ${turAciklama}
+                        </span>
+                        <button onclick="removeKisit(${index})" style="background: #f56565; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                            Sil
+                        </button>
+                    </div>
+                `;
+            });
+        }
+        
+        function removeKisit(index) {
+            if (confirm('Bu kısıtı silmek istediğinizden emin misiniz?')) {
+                kisitlar.splice(index, 1);
+                updateKisitlarListesi();
+                showMessage('Kısıt başarıyla silindi.', 'success');
+            }
+        }
+        
+        function checkConflict(yeniAtama) {
+            for (let atama of atamalar) {
+                // Aynı gün kontrolü
+                if (atama.gun === yeniAtama.gun) {
+                    // Zaman çakışması kontrolü
+                    const mevcutBaslangic = saatler.indexOf(atama.baslangic);
+                    const mevcutBitis = saatler.indexOf(atama.bitis);
+                    const yeniBaslangic = saatler.indexOf(yeniAtama.baslangic);
+                    const yeniBitis = saatler.indexOf(yeniAtama.bitis);
+                    
+                    const zamanCakismasi = !(yeniBitis <= mevcutBaslangic || yeniBaslangic >= mevcutBitis);
+                    
+                    if (zamanCakismasi) {
+                        // Öğretmen çakışması
+                        if (atama.ogretimElemani === yeniAtama.ogretimElemani) {
+                            return `⚠️ ${yeniAtama.ogretimElemani} öğretim elemanı bu saatte başka bir derste!`;
+                        }
+                        
+                        // Derslik çakışması
+                        if (atama.derslik === yeniAtama.derslik) {
+                            return `⚠️ ${getDerslikAdi(yeniAtama.derslik)} bu saatte dolu!`;
+                        }
+                        
+                        // Sınıf çakışması
+                        if (atama.program === yeniAtama.program && atama.sinif === yeniAtama.sinif) {
+                            return `⚠️ Bu sınıfın bu saatte başka dersi var!`;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        
+        function getDerslikAdi(kod) {
+            const derslikler = {
+                'D1': 'Derslik 1',
+                'D2': 'Derslik 2',
+                'BL1': 'Bilgisayar Lab. 1',
+                'BL2': 'Bilgisayar Lab. 2',
+                'EL': 'Elektronik Lab.',
+                'HPL': 'Hidrolik ve Pnömatik Lab.',
+                'KS': 'Konferans Salonu',
+                'DO': 'Danışman Odası',
+                'YB': 'Yerleşke Bahçesi'
+            };
+            return derslikler[kod] || kod;
+        }
+        
+        function temizle() {
+            document.getElementById('ogretimElemani').value = '';
+            resetFields(['bolum', 'program', 'sinif', 'ders', 'derslik', 'gun', 'baslangic', 'bitis']);
+        }
+        
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('statusMessage');
+            messageDiv.textContent = message;
+            messageDiv.className = `status-message status-${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        function updateScheduleTable() {
+            initScheduleTable();
+            
+            const filteredAtamalar = getFilteredAtamalar();
+            
+            filteredAtamalar.forEach(atama => {
+                const baslangicIndex = saatler.indexOf(atama.baslangic);
+                const bitisIndex = saatler.indexOf(atama.bitis);
+                const rowspan = bitisIndex - baslangicIndex;
+                
+                // İlgili hücreyi bul
+                const rows = document.querySelectorAll('#scheduleBody tr');
+                const startRow = getRowIndex(atama.baslangic);
+                
+                if (startRow >= 0 && startRow < rows.length) {
+                    const cell = rows[startRow].children[parseInt(atama.gun)];
+                    
+                    if (cell) {
+                        cell.rowSpan = rowspan;
+                        cell.innerHTML = `
+                            <div class="course-block">
+                                <div class="course-name">${atama.ders}</div>
+                                <div class="course-info">${atama.ogretimElemani}</div>
+                                <div class="course-info">${getDerslikAdi(atama.derslik)}</div>
+                            </div>
+                        `;
+                        
+                        // Alt satırlardaki hücreleri gizle
+                        for (let i = 1; i < rowspan; i++) {
+                            if (startRow + i < rows.length) {
+                                rows[startRow + i].children[parseInt(atama.gun)].style.display = 'none';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function getFilteredAtamalar() {
+            if (currentView === 'program') {
+                const [program, sinif] = currentTab.split('-');
+                return atamalar.filter(a => a.program === program && a.sinif === sinif);
+            } else if (currentView === 'derslik') {
+                return atamalar.filter(a => a.derslik === currentTab);
+            } else if (currentView === 'ogretmen') {
+                return atamalar.filter(a => a.ogretimElemani === currentTab);
+            }
+            return atamalar;
+        }
+        
+        function getRowIndex(saat) {
+            const saatSlotlari = [
+                '08:30-09:00', '09:00-09:30', '09:30-10:00', '10:00-10:30',
+                '10:30-11:00', '11:00-11:30', '11:30-12:00', '12:00-12:30',
+                '12:30-14:00', '14:00-14:30', '14:30-15:00', '15:00-15:30',
+                '15:30-16:00', '16:00-16:30', '16:30-17:00', '17:00-17:30',
+                '17:30-18:00'
+            ];
+            
+            for (let i = 0; i < saatSlotlari.length; i++) {
+                if (saatSlotlari[i].startsWith(saat)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
+        function updateAssignmentsList() {
+            const listDiv = document.getElementById('assignmentsList');
+            
+            if (atamalar.length === 0) {
+                listDiv.innerHTML = '<p style="color: #999;">Henüz atama yapılmadı.</p>';
+                return;
+            }
+            
+            listDiv.innerHTML = '';
+            atamalar.forEach((atama, index) => {
+                const gunAdi = ['', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'][parseInt(atama.gun)];
+                
+                listDiv.innerHTML += `
+                    <div class="assignment-item">
+                        <div class="assignment-details">
+                            <strong>${atama.ders}</strong>
+                            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                ${atama.program}-${atama.sinif}. Sınıf | ${atama.ogretimElemani} | 
+                                ${getDerslikAdi(atama.derslik)} | ${gunAdi} ${atama.baslangic}-${atama.bitis}
+                            </div>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="btn btn-danger btn-small" onclick="removeAssignment(${index})">Sil</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function removeAssignment(index) {
+            if (confirm('Bu atamayı silmek istediğinizden emin misiniz?')) {
+                atamalar.splice(index, 1);
+                updateScheduleTable();
+                updateAssignmentsList();
+                showMessage('Atama başarıyla silindi.', 'success');
+            }
+        }
+        
+        function changeView() {
+            currentView = document.getElementById('viewType').value;
+            updateTabs();
+            updateScheduleTable();
+        }
+        
+        function updateTabs() {
+            const tabContainer = document.getElementById('tabButtons');
+            tabContainer.innerHTML = '';
+            
+            if (currentView === 'program') {
+                const programTabs = ['BP-1', 'BP-2', 'ET-1', 'ET-2', 'EE-1', 'YE-1'];
+                programTabs.forEach(tab => {
+                    const button = document.createElement('button');
+                    button.className = `tab-button ${tab === currentTab ? 'active' : ''}`;
+                    button.textContent = tab;
+                    button.onclick = () => selectTab(tab);
+                    tabContainer.appendChild(button);
+                });
+            } else if (currentView === 'derslik') {
+                const derslikTabs = ['D1', 'D2', 'BL1', 'BL2', 'EL'];
+                derslikTabs.forEach(tab => {
+                    const button = document.createElement('button');
+                    button.className = `tab-button ${tab === currentTab ? 'active' : ''}`;
+                    button.textContent = getDerslikAdi(tab);
+                    button.onclick = () => selectTab(tab);
+                    tabContainer.appendChild(button);
+                });
+            } else if (currentView === 'ogretmen') {
+                const ogretmenTabs = ['AA', 'EA', 'EY', 'MD', 'MA', 'MuD', 'OKS', 'SB', 'SE', 'SD', 'TD', 'UT'];
+                ogretmenTabs.forEach(tab => {
+                    const button = document.createElement('button');
+                    button.className = `tab-button ${tab === currentTab ? 'active' : ''}`;
+                    button.textContent = tab;
+                    button.onclick = () => selectTab(tab);
+                    tabContainer.appendChild(button);
+                });
+            }
+        }
+        
+        function selectTab(tab) {
+            currentTab = tab;
+            updateTabs();
+            updateScheduleTable();
+        }
+        
+        function initScheduleTable() {
+            const tbody = document.getElementById('scheduleBody');
+            tbody.innerHTML = '';
+            
+            const saatSlotlari = [
+                '08:30-09:00', '09:00-09:30', '09:30-10:00', '10:00-10:30',
+                '10:30-11:00', '11:00-11:30', '11:30-12:00', '12:00-12:30',
+                '12:30-14:00', '14:00-14:30', '14:30-15:00', '15:00-15:30',
+                '15:30-16:00', '16:00-16:30', '16:30-17:00', '17:00-17:30',
+                '17:30-18:00'
+            ];
+            
+            saatSlotlari.forEach(slot => {
+                const row = document.createElement('tr');
+                
+                // Saat hücresi
+                const timeCell = document.createElement('td');
+                timeCell.className = 'time-cell';
+                timeCell.textContent = slot;
+                row.appendChild(timeCell);
+                
+                // Gün hücreleri
+                for (let i = 1; i <= 5; i++) {
+                    const cell = document.createElement('td');
+                    
+                    if (slot === '12:30-14:00') {
+                        if (i === 1) {
+                            cell.colSpan = 5;
+                            cell.className = 'lunch-break';
+                            cell.textContent = 'ÖĞLE ARASI';
+                            row.appendChild(cell);
+                        }
+                        break;
+                    } else {
+                        cell.textContent = '';
+                        row.appendChild(cell);
+                    }
+                }
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Sayfa yüklendiğinde
+        window.onload = function() {
+            initScheduleTable();
+            updateTabs();
+        };
+    </script>
+</body>
+</html>

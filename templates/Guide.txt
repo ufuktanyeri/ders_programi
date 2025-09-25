@@ -1,0 +1,38 @@
+Yazışmamız bir önceki sohbette yetmedi. Sana özet sunayım:
+
+Senden istediğim Excel VBA ile Haftalık Ders Programı Çizelgesi Uygulaması. Oluşturacağımız çalışma kitabında Kontrol Paneli isimli bir tane çalışma sayfası olsun. Burada aşağıdaki gibi bilgi giriş alanlarına ihtiyaç var:
+
+Veri Girişi
+
+- Üniversite Adı
+- Birim Adı
+- Yıl
+- Eğitim-Öğretim Yılı
+- Dönem
+- Sınıf
+- Program Adı
+- Program Adı -> Sınıf -> Dersler
+- Program Adı -> Dönem -> Dersler
+- Öğretim Elemanı -> İsim
+- Öğretim Elemanı -> Dönem -> Dersler
+- Öğretim Elemanı -> Günler
+- Öğretim Elemanı -> Alternatif Günler
+- Öğretim Elemanı -> Öncelik Puanı
+- Derslik -> İsimler
+- Derslik -> Kapasite
+
+Raporlar
+- Haftalık Yüksekokul Ders Çizelgesi
+- Haftalık Yüksekokul Renkli Ders Çizelgesi
+  (Renkli Ders Çizelgesi: Her Öğretim Elemanı için farklı arkaplan ve yazı rengi kombinasyonu kullanan)
+- Haftalık Program Ders Çizelgesi
+- Haftalık Öğretim Elemanı Ders Çizelgesi
+
+Metotlar
+- Derslik Çakışması Kontrol
+- Ders Çakışması Kontrol
+- Öğretim Elemanı -> Dönem -> Ders Listele
+- Yedek
+- İşlevi Geri Al
+- Sıfırla
+

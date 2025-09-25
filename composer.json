@@ -1,0 +1,11 @@
+{
+    "name": "course-schedule/analysis",
+    "description": "Course Schedule Management System",
+    "type": "project",
+    "require-dev": {
+        "phpstan/phpstan": "^2.1"
+    },
+    "require": {
+        "google/apiclient": "^2.0"
+    }
+}

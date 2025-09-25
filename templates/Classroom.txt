@@ -1,0 +1,9 @@
+Derslik 1 - Classroom 1
+Derslik 2 - Classroom 2
+Bilgisayar Laboratuvarı 1 - Computer Laboratory 1
+Bilgisayar Laboratuvarı 2 - Computer Laboratory 2
+Elektronik Laboratuvarı - Electronics Laboratory
+Hidrolik ve Pnömatik Laboratuvarı - Hydraulics and Pneumatics Laboratory
+Konferans Salonu - Conference Hall
+Danışman Odası - Advisor Office
+Yerleşke Bahçesi - Campus Garden

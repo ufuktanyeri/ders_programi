@@ -1,0 +1,25 @@
+parameters:
+    level: 5
+    paths:
+        - app/Controllers
+        - app/Services
+        - app/Repositories
+        - core
+        - public/index.php
+
+    excludePaths:
+        - vendor/*
+        - templates/*
+        - app/Views/*
+        - admin/*
+
+    ignoreErrors:
+        # Path resolution issues
+        - '#Path in require_once\(\) .* is not a file or it does not exist#'
+        # Legacy patterns
+        - '#Access to an undefined property PDO::\$#'
+        - '#Variable \$db might not be defined#'
+        - '#Instantiated class .* not found#'
+        - '#class .* not found#'
+        - '#Call to method .* on an unknown class#'
+        - '#Parameter .* has invalid type .*#'

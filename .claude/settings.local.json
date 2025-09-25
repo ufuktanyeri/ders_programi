@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(phpstan:*)",
+      "Bash(php:*)",
+      "Bash(composer --version)",
+      "Bash(composer init:*)",
+      "Bash(composer require:*)",
+      "Bash(./vendor/bin/phpstan analyse *.php --level=5)",
+      "Bash(./vendor/bin/phpstan analyse *.php --level=3)",
+      "Bash(./vendor/bin/phpstan analyse:*)",
+      "Bash(mysql:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

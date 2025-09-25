@@ -1,0 +1,63 @@
+BİLGİSAYAR PROGRAMCILIĞI 1. SINIF
+Atatürk İlkeleri ve İnkılap Tarihi I
+Bilgisayar Donanımı ve Ağ
+Beden Eğitimi
+Grafik ve Animasyon
+Matematik
+Programlama Temelleri
+Temel Yabancı Dil (İngilizce)
+Türk Dili I
+Web Tasarım Temelleri
+
+BİLGİSAYAR PROGRAMCILIĞI 2. SINIF
+Bilgisayar Destekli Çizim
+Görüntü İşlemenin Temelleri
+İşletme Yönetimi I
+Mikrobilgisayar ve Assembler
+Nesne Tabanlı Programlama
+Sunucu İşletim Sistemleri
+Temel Yabancı Dil (İngilizce)
+Veri Tabanı Uygulamaları
+Dönem Projesi
+
+ELEKTRONİK TEKNOLOJİSİ 1. SINIF
+Doğru Akım Devre Analizi
+Mikrobilgisayar ve Assembler
+Sayısal Elektronik
+Temel Elektronik
+Türk Dili I
+Temel Yabancı Dil (İngilizce)
+Bilgisayar Destekli Çizim
+
+ELEKTRONİK TEKNOLOJİSİ 2. SINIF
+Elektrik Motorları ve Sürücüleri
+Güç Elektroniği
+Programlanabilir Denetleyiciler
+Dönem Projesi
+Elektrik Elektronik Ölçme
+Elektrik Enerjisi Ürt. İlt. ve Dağ.
+Temel Enerji Teknolojileri
+İşletme Yönetimi I
+
+ELEKTRİK ENERJİSİ ÜRETİM İLETİM DAĞITIM 1. SINIF
+Atatürk İlkeleri ve İnkılap Tarihi I
+Bilgi ve İletişim Teknolojileri I
+Doğru Akım Devre Analizi
+Elektrik Elektronik Ölçme
+Matematik
+Temel Elektronik
+Temel Yabancı Dil (İngilizce)
+Türk Dili I
+Beden Eğitimi
+
+YENİLENEBİLİR ENERJİ TEKNİKERLİĞİ 1. SINIF
+Atatürk İlkeleri ve İnkılap Tarihi I
+Bilgi ve İletişim Teknolojileri I
+Doğru Akım Devre Analizi
+Elektrik Elektronik Ölçme
+Elektrik Enerjisi Ürt. İlt. ve Dağ.
+Matematik
+Temel Elektronik
+Temel Yabancı Dil (İngilizce)
+Türk Dili I
+Beden Eğitimi

@@ -1,0 +1,77 @@
+A.A. Verdiği Dersler:
+PZT Ö.S.; 15:00-17:00; Programlama Temelleri; 2
+SALI Ö.Ö.; 09:00-11:00; Dönem Projesi; 2
+ÇRŞ Ö.S.; 16:00-18:00; Programlama Temelleri; 2
+
+E.A. Verdiği Dersler:
+CUMA Ö.S.; 13:30-17:30; Sayısal Elektronik; 4
+CUMA Ö.Ö.; 08:30-12:30; Temel Elektronik; 4
+PRŞ. Ö.S.; 13:30-17:30; Programlanabilir Denetleyiciler; 4
+PRŞ. Ö.Ö.; 08:30-12:30; Güç Elektroniği; 4
+PZT Ö.S.; 13:30-17:30; Elektrik Motorları ve Sürücüleri; 4
+PZT Ö.Ö.; 09:00-13:00; Temel Elektronik; 4
+SALI Ö.Ö.; 08:30-12:30; Temel Elektronik; 4
+
+E.Y. Verdiği Dersler:
+SALI Ö.S.; 16:00-18:00; Matematik; 2
+SALI Ö.Ö.; 08:30-11:30; Matematik; 3
+
+M.A. Verdiği Dersler:
+PRŞ. Ö.S.; 13:30-16:30; Doğru Akım Devre Analizi; 3
+PRŞ. Ö.Ö.; 09:00-12:00; Doğru Akım Devre Analizi; 3
+
+M.D. Verdiği Dersler:
+PZT Ö.S.; 13:30-18:00; Atatürk İlkeleri ve İnkılap T I –; 4
+PZT Ö.Ö.; 09:00-12:30; Atatürk İlkeleri ve İnkılap T I –; 4
+
+Mu.D. Verdiği Dersler:
+CUMA Ö.S.; 13:30-17:30; Elektrik Enerjisi Ürt. İlt. ve Dağ.; 4
+CUMA Ö.Ö.; 09:00-13:00; Temel Enerji Teknolojileri; 4
+
+O.K.Ş. Verdiği Dersler:
+SALI Ö.S.; 14:00-17:30; Türk Dili I; 4
+ÇRŞ Ö.S.; 14:00-17:30; Türk Dili I; 4
+
+S.B. Verdiği Dersler:
+SALI Ö.S.; 13:30-17:30; Temel Yabancı Dil; 4
+SALI Ö.Ö.; 09:00-13:00; Temel Yabancı Dil; 4
+ÇRŞ Ö.S.; 13:30-17:30; Temel Yabancı Dil; 4
+ÇRŞ Ö.Ö.; 09:00-13:00; Temel Yabancı Dil; 4
+
+S.D. Verdiği Dersler:
+PZT Ö.S.; 14:00-15:00; Matematik; 1
+PZT Ö.Ö.; 08:30-13:00; Matematik; 5
+
+S.E. Verdiği Dersler:
+CUMA Ö.S.; 14:00-16:00; Sunucu İşletim Sistemleri; 2
+CUMA Ö.S.; 16:00-18:00; Bilgisayar Destekli Çizim; 2
+CUMA Ö.Ö.; 09:00-13:00; Nesne Tabanlı Programlama; 4
+PRŞ. Ö.S.; 16:00-18:00; Bilgisayar Destekli Çizim; 2
+PRŞ. Ö.Ö.; 09:00-11:00; Bilgisayar Donanımı ve Ağ; 2
+PRŞ. Ö.Ö.; 11:00-13:00; Grafik ve Animasyon; 2
+SALI Ö.S.; 13:30-15:30; Bilgi ve İletişim Teknolojileri I; 2
+SALI Ö.S.; 15:30-17:30; İşletme Yönetimi I; 2
+ÇRŞ Ö.S.; 13:30-17:30; Bilgisayar Destekli Çizim; 4
+ÇRŞ Ö.Ö.; 09:00-11:00; İşletme Yönetimi I; 2
+ÇRŞ Ö.Ö.; 11:00-13:00; Bilgisayar Donanımı ve Ağ; 2
+
+T.D. Verdiği Dersler:
+CUMA Ö.S.; 14:00-18:00; Elektrik Elektronik Ölçme; 4
+CUMA Ö.Ö.; 08:30-12:30; Elektrik Elektronik Ölçme; 4
+PRŞ. Ö.S.; 13:30-17:30; Doğru Akım Devre Analizi; 4
+PRŞ. Ö.Ö.; 08:30-12:30; Ölçme Tekniği; 4
+PZT Ö.Ö.; 09:30-12:30; Dönem Projesi; 3
+
+U.T. Verdiği Dersler:
+PRŞ. Ö.S.; 14:00-16:00; Mikrobilgisayar ve Assembler; 2
+PRŞ. Ö.Ö.; 09:00-13:00; Görüntü İşlemenin Temelleri; 4
+PZT Ö.S.; 15:00-18:00; Beden Eğitimi; 3
+PZT Ö.Ö.; 08:30-10:30; Bilgi ve İletişim Teknolojileri I; 2
+PZT Ö.Ö.; 11:30-12:30; Beden Eğitimi; 1
+SALI Ö.S.; 13:30-15:30; Mikrobilgisayar ve Assembler; 2
+SALI Ö.S.; 16:00-18:00; Web Tasarım Temelleri; 2
+SALI Ö.Ö.; 08:30-10:30; Mikrobilgisayar ve Assembler; 2
+SALI Ö.Ö.; 11:00-13:00; Bilgi ve İletişim Teknolojileri I; 2
+ÇRŞ Ö.S.; 14:00-18:00; Veri Tabanı Uygulamaları; 4
+ÇRŞ Ö.Ö.; 09:00-11:00; Web Tasarım Temelleri; 2
+ÇRŞ Ö.Ö.; 11:00-13:00; Mikrobilgisayar ve Assembler; 2

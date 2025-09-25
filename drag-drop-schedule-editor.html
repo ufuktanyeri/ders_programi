@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akıllı Ders Programı Düzenleyici - Puzzle Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Sol Panel - Dışarıdaki Dersler */
+        .left-panel {
+            width: 300px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .left-panel h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            font-size: 18px;
+        }
+        
+        .unassigned-courses {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .course-card {
+            padding: 10px;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s;
+            position: relative;
+            color: white;
+            font-size: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .course-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .course-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+        
+        .course-card-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        .course-card-info {
+            font-size: 11px;
+            opacity: 0.9;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .course-duration {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255,255,255,0.3);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+        
+        /* Sağ Panel - Program Tabloları */
+        .right-panel {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+        }
+        
+        .btn-warning {
+            background: #ed8936;
+        }
+        
+        .btn-danger {
+            background: #f56565;
+        }
+        
+        /* Program Tabloları */
+        .programs-wrapper {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .program-table {
+            flex: 0 0 auto;
+            min-width: 180px;
+        }
+        
+        .program-title {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .schedule-table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            border: 1px solid #ddd;
+        }
+        
+        .schedule-table th {
+            background: #f8f9fa;
+            padding: 6px;
+            text-align: center;
+            font-size: 11px;
+            border: 1px solid #ddd;
+            color: #555;
+        }
+        
+        .schedule-table td {
+            border: 1px solid #ddd;
+            padding: 2px;
+            height: 30px;
+            position: relative;
+        }
+        
+        .time-cell {
+            background: #f0f0f0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .day-cell {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 11px;
+        }
+        
+        .course-slot {
+            min-height: 28px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .course-slot.drag-over {
+            background: #e3f2fd;
+            border: 2px dashed #2196F3;
+        }
+        
+        .course-slot.occupied {
+            padding: 1px;
+        }
+        
+        .lunch-break {
+            background: #ffe4b5;
+            text-align: center;
+            font-weight: bold;
+            color: #ff6b00;
+            font-size: 10px;
+            padding: 5px;
+        }
+        
+        /* Yerleştirilmiş Ders */
+        .placed-course {
+            height: 100%;
+            padding: 2px;
+            border-radius: 4px;
+            cursor: move;
+            font-size: 9px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .placed-course:hover {
+            z-index: 10;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
+        .placed-course.conflict {
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+        
+        .conflict-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background: #f56565;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 20;
+        }
+        
+        /* Derslik Değiştirme */
+        .room-selector {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            padding: 5px;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            min-width: 150px;
+        }
+        
+        .room-option {
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.2s;
+        }
+        
+        .room-option:hover {
+            background: #e3f2fd;
+        }
+        
+        .room-option.available {
+            color: #48bb78;
+        }
+        
+        .room-option.occupied {
+            color: #f56565;
+            text-decoration: line-through;
+        }
+        
+        /* Çakışma Paneli */
+        .conflict-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .conflict-panel.active {
+            display: block;
+        }
+        
+        .conflict-panel h3 {
+            color: #f56565;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .conflict-item {
+            background: #fff5f5;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 4px solid #f56565;
+            font-size: 12px;
+        }
+        
+        .conflict-item strong {
+            color: #c53030;
+        }
+        
+        /* Öğretmen Renkleri ve Desenleri */
+        .teacher-AA { background: linear-gradient(45deg, #FF6B6B, #4ECDC4); }
+        .teacher-EA { background: linear-gradient(45deg, #95E1D3, #F38181); }
+        .teacher-EY { background: linear-gradient(45deg, #A8E6CF, #FFD3B6); }
+        .teacher-MD { background: linear-gradient(45deg, #FFAAA5, #FF8B94); }
+        .teacher-MA { background: linear-gradient(45deg, #8FCACA, #B7B7FF); }
+        .teacher-MuD { background: linear-gradient(45deg, #FFC0CB, #FFB6C1); }
+        .teacher-OKS { background: linear-gradient(45deg, #B5EAD7, #C7CEEA); }
+        .teacher-SB { background: linear-gradient(45deg, #FFD93D, #6BCB77); }
+        .teacher-SE { background: linear-gradient(45deg, #FFA8A8, #FCFFB2); }
+        .teacher-SD { background: linear-gradient(45deg, #B4E7CE, #F7D6E0); }
+        .teacher-TD { background: linear-gradient(45deg, #F5B7B1, #D2B4DE); }
+        .teacher-UT { background: linear-gradient(45deg, #AED6F1, #F9E79F); }
+        
+        /* Pattern overlay for teachers */
+        .pattern-dots::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px);
+            background-size: 5px 5px;
+        }
+        
+        .pattern-stripes::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.2) 3px, rgba(255,255,255,0.2) 6px);
+        }
+        
+        /* İstatistik Paneli */
+        .stats-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 12px;
+        }
+        
+        .stat-item {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        .stat-item span {
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sol Panel - Atanmamış Dersler -->
+        <div class="left-panel">
+            <h2>📚 Atanmamış Dersler</h2>
+            <div class="unassigned-courses" id="unassignedCourses">
+                <!-- Dersler buraya gelecek -->
+            </div>
+        </div>
+        
+        <!-- Sağ Panel - Program Tabloları -->
+        <div class="right-panel">
+            <div class="header">
+                <h1>🎯 Ders Programı Düzenleyici</h1>
+                <div class="controls">
+                    <button class="btn btn-warning" onclick="checkAllConflicts()">⚠️ Çakışma Kontrolü</button>
+                    <button class="btn btn-success" onclick="saveSchedule()">💾 Kaydet</button>
+                    <button class="btn" onclick="exportSchedule()">📤 Dışa Aktar</button>
+                    <button class="btn btn-danger" onclick="resetAll()">🔄 Sıfırla</button>
+                </div>
+            </div>
+            
+            <div class="programs-wrapper" id="programsWrapper">
+                <!-- Program tabloları buraya gelecek -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Çakışma Paneli -->
+    <div class="conflict-panel" id="conflictPanel">
+        <h3>⚠️ Çakışmalar</h3>
+        <div id="conflictList"></div>
+        <button class="btn" onclick="closeConflictPanel()">Kapat</button>
+    </div>
+    
+    <!-- İstatistik Paneli -->
+    <div class="stats-panel">
+        <div class="stat-item">Toplam Ders: <span id="totalCourses">0</span></div>
+        <div class="stat-item">Yerleşen: <span id="placedCourses">0</span></div>
+        <div class="stat-item">Bekleyen: <span id="waitingCourses">0</span></div>
+        <div class="stat-item">Çakışma: <span id="conflictCount">0</span></div>
+    </div>
+    
+    <script>
+        // Veri Yapıları
+        const programs = ['BP-1', 'BP-2', 'ET-1', 'ET-2', 'EE-1', 'EE-2', 'YE-1', 'YE-2'];
+        const days = ['Pzt', 'Salı', 'Çrş', 'Prş', 'Cuma'];
+        const timeSlots = [
+            '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00',
+            '12:30-14:00', // Öğle arası
+            '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'
+        ];
+        
+        const classrooms = [
+            { id: 'D1', name: 'Derslik 1', capacity: 30 },
+            { id: 'D2', name: 'Derslik 2', capacity: 30 },
+            { id: 'BL1', name: 'Bilgisayar Lab. 1', capacity: 25 },
+            { id: 'BL2', name: 'Bilgisayar Lab. 2', capacity: 25 },
+            { id: 'EL', name: 'Elektronik Lab.', capacity: 20 },
+            { id: 'HPL', name: 'Hidrolik Lab.', capacity: 20 },
+            { id: 'KS', name: 'Konferans Salonu', capacity: 100 },
+            { id: 'DO', name: 'Danışman Odası', capacity: 10 }
+        ];
+        
+        // Öğretmen desenleri
+        const teacherPatterns = {
+            'AA': 'pattern-dots',
+            'EA': 'pattern-stripes',
+            'EY': 'pattern-dots',
+            'MD': 'pattern-stripes',
+            'MA': 'pattern-dots',
+            'MuD': 'pattern-stripes',
+            'OKS': 'pattern-dots',
+            'SB': 'pattern-stripes',
+            'SE': 'pattern-dots',
+            'SD': 'pattern-stripes',
+            'TD': 'pattern-dots',
+            'UT': 'pattern-stripes'
+        };
+        
+        // Örnek dersler
+        const sampleCourses = [
+            { id: 1, name: 'Matematik', teacher: 'MA', room: 'D1', program: 'BP-1', duration: 2 },
+            { id: 2, name: 'Programlama Temelleri', teacher: 'SB', room: 'BL1', program: 'BP-1', duration: 4 },
+            { id: 3, name: 'Web Tasarım', teacher: 'EA', room: 'BL2', program: 'BP-1', duration: 3 },
+            { id: 4, name: 'Veri Tabanı', teacher: 'OKS', room: 'BL1', program: 'BP-2', duration: 3 },
+            { id: 5, name: 'Nesne Tabanlı Prog.', teacher: 'SE', room: 'D2', program: 'BP-2', duration: 2 },
+            { id: 6, name: 'Elektronik', teacher: 'EY', room: 'EL', program: 'ET-1', duration: 3 },
+            { id: 7, name: 'Devre Analizi', teacher: 'MD', room: 'D1', program: 'ET-1', duration: 2 },
+            { id: 8, name: 'Güç Elektroniği', teacher: 'TD', room: 'EL', program: 'ET-2', duration: 3 },
+            { id: 9, name: 'Türk Dili', teacher: 'AA', room: 'D2', program: 'EE-1', duration: 2 },
+            { id: 10, name: 'İngilizce', teacher: 'UT', room: 'D1', program: 'YE-1', duration: 2 }
+        ];
+        
+        let draggedElement = null;
+        let draggedCourse = null;
+        let sourceSlot = null;
+        let placedCourses = {};
+        let conflicts = [];
+        
+        // Başlangıç
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePrograms();
+            loadUnassignedCourses();
+            updateStats();
+        });
+        
+        // Program tablolarını oluştur
+        function initializePrograms() {
+            const wrapper = document.getElementById('programsWrapper');
+            wrapper.innerHTML = '';
+            
+            programs.forEach(program => {
+                const table = createProgramTable(program);
+                wrapper.appendChild(table);
+            });
+        }
+        
+        // Program tablosu oluştur
+        function createProgramTable(programId) {
+            const container = document.createElement('div');
+            container.className = 'program-table';
+            
+            // Başlık
+            const title = document.createElement('div');
+            title.className = 'program-title';
+            title.textContent = programId;
+            container.appendChild(title);
+            
+            // Tablo
+            const table = document.createElement('table');
+            table.className = 'schedule-table';
+            
+            // Başlık satırı
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = '<th class="time-cell">Saat</th>';
+            days.forEach(day => {
+                headerRow.innerHTML += `<th class="day-cell">${day}</th>`;
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Gövde
+            const tbody = document.createElement('tbody');
+            timeSlots.forEach((time, timeIndex) => {
+                const row = document.createElement('tr');
+                
+                if (time === '12:30-14:00') {
+                    // Öğle arası
+                    row.innerHTML = `
+                        <td class="time-cell">${time}</td>
+                        <td colspan="5" class="lunch-break">ÖĞLE ARASI</td>
+                    `;
+                } else {
+                    row.innerHTML = `<td class="time-cell">${time}</td>`;
+                    
+                    days.forEach((day, dayIndex) => {
+                        const cell = document.createElement('td');
+                        cell.className = 'course-slot';
+                        cell.dataset.program = programId;
+                        cell.dataset.day = dayIndex;
+                        cell.dataset.time = timeIndex;
+                        
+                        // Drag & Drop olayları
+                        cell.addEventListener('dragover', handleDragOver);
+                        cell.addEventListener('drop', handleDrop);
+                        cell.addEventListener('dragleave', handleDragLeave);
+                        
+                        row.appendChild(cell);
+                    });
+                }
+                
+                tbody.appendChild(row);
+            });
+            
+            table.appendChild(tbody);
+            container.appendChild(table);
+            
+            return container;
+        }
+        
+        // Atanmamış dersleri yükle
+        function loadUnassignedCourses() {
+            const container = document.getElementById('unassignedCourses');
+            container.innerHTML = '';
+            
+            sampleCourses.forEach(course => {
+                const card = createCourseCard(course);
+                container.appendChild(card);
+            });
+        }
+        
+        // Ders kartı oluştur
+        function createCourseCard(course) {
+            const card = document.createElement('div');
+            const teacherClass = `teacher-${course.teacher.replace('.', '')}`;
+            const patternClass = teacherPatterns[course.teacher.replace('.', '')];
+            
+            card.className = `course-card ${teacherClass} ${patternClass}`;
+            card.draggable = true;
+            card.dataset.course = JSON.stringify(course);
+            
+            card.innerHTML = `
+                <div class="course-duration">${course.duration * 30} dk</div>
+                <div class="course-card-header">${course.name}</div>
+                <div class="course-card-info">
+                    <span>${course.teacher}</span>
+                    <span>${course.room}</span>
+                </div>
+            `;
+            
+            // Drag olayları
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragend', handleDragEnd);
+            
+            return card;
+        }
+        
+        // Drag & Drop İşlemleri
+        function handleDragStart(e) {
+            draggedElement = this;
+            draggedCourse = JSON.parse(this.dataset.course);
+            
+            // Kaynak slot'u kaydet
+            if (this.parentElement.classList.contains('course-slot')) {
+                sourceSlot = this.parentElement;
+            } else {
+                sourceSlot = null;
+            }
+            
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            
+            // Tüm drag-over sınıflarını temizle
+            document.querySelectorAll('.drag-over').forEach(el => {
+                el.classList.remove('drag-over');
+            });
+        }
+        
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            
+            // Yeterli alan var mı kontrol et
+            const slot = this;
+            const timeIndex = parseInt(slot.dataset.time);
+            
+            if (canPlaceCourse(slot, draggedCourse.duration)) {
+                e.dataTransfer.dropEffect = 'move';
+                this.classList.add('drag-over');
+            } else {
+                e.dataTransfer.dropEffect = 'none';
+            }
+            
+            return false;
+        }
+        
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+        
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            
+            this.classList.remove('drag-over');
+            
+            const targetSlot = this;
+            
+            // Hedef slotta ders var mı?
+            if (targetSlot.querySelector('.placed-course')) {
+                // Mevcut dersi dışarı çıkar
+                const existingCourse = targetSlot.querySelector('.placed-course');
+                const existingData = JSON.parse(existingCourse.dataset.course);
+                
+                // Dışarıya taşı
+                const unassignedContainer = document.getElementById('unassignedCourses');
+                const newCard = createCourseCard(existingData);
+                unassignedContainer.appendChild(newCard);
+                
+                existingCourse.remove();
+                targetSlot.classList.remove('occupied');
+            }
+            
+            // Yeni dersi yerleştir
+            placeCourse(targetSlot, draggedCourse);
+            
+            // Kaynak elementi sil
+            if (draggedElement) {
+                draggedElement.remove();
+            }
+            
+            // Kaynak slot'u temizle
+            if (sourceSlot && sourceSlot !== targetSlot) {
+                sourceSlot.classList.remove('occupied');
+            }
+            
+            // Çakışmaları kontrol et
+            checkConflictsForTimeSlot(targetSlot.dataset.time);
+            updateStats();
+            
+            return false;
+        }
+        
+        // Ders yerleştirme kontrolü
+        function canPlaceCourse(slot, duration) {
+            const timeIndex = parseInt(slot.dataset.time);
+            const maxTime = timeSlots.length - 1;
+            
+            // Öğle arasını atla
+            let availableSlots = 0;
+            for (let i = timeIndex; i < Math.min(timeIndex + duration, maxTime); i++) {
+                if (timeSlots[i] === '12:30-14:00') continue;
+                availableSlots++;
+            }
+            
+            return availableSlots >= duration;
+        }
+        
+        // Dersi yerleştir
+        function placeCourse(slot, course) {
+            const placedDiv = document.createElement('div');
+            const teacherClass = `teacher-${course.teacher.replace('.', '')}`;
+            const patternClass = teacherPatterns[course.teacher.replace('.', '')];
+            
+            placedDiv.className = `placed-course ${teacherClass} ${patternClass}`;
+            placedDiv.draggable = true;
+            placedDiv.dataset.course = JSON.stringify(course);
+            
+            // İçerik
+            placedDiv.innerHTML = `
+                <div style="font-weight: bold;">${course.name}</div>
+                <div style="font-size: 8px;">${course.teacher}</div>
+                <div style="font-size: 8px;">${course.room}</div>
+            `;
+            
+            // Çok bloklu ders için yükseklik ayarla
+            if (course.duration > 1) {
+                placedDiv.style.height = `${course.duration * 30 - 4}px`;
+            }
+            
+            // Drag olayları
+            placedDiv.addEventListener('dragstart', handleDragStart);
+            placedDiv.addEventListener('dragend', handleDragEnd);
+            placedDiv.addEventListener('click', handleCourseClick);
+            
+            slot.appendChild(placedDiv);
+            slot.classList.add('occupied');
+            
+            // Yerleşimi kaydet
+            const key = `${slot.dataset.program}-${slot.dataset.day}-${slot.dataset.time}`;
+            placedCourses[key] = course;
+        }
+        
+        // Ders tıklama - Derslik değiştirme
+        function handleCourseClick(e) {
+            e.stopPropagation();
+            const course = JSON.parse(this.dataset.course);
+            const slot = this.parentElement;
+            
+            // Derslik seçici oluştur
+            if (document.querySelector('.room-selector')) {
+                document.querySelector('.room-selector').remove();
+            }
+            
+            const selector = document.createElement('div');
+            selector.className = 'room-selector';
+            
+            // Uygun derslikleri bul
+            const availableRooms = getAvailableRooms(slot.dataset.day, slot.dataset.time, course.duration);
+            
+            classrooms.forEach(room => {
+                const option = document.createElement('div');
+                option.className = 'room-option';
+                
+                if (availableRooms.includes(room.id)) {
+                    option.classList.add('available');
+                    option.innerHTML = `✓ ${room.name}`;
+                    option.addEventListener('click', () => {
+                        course.room = room.id;
+                        this.dataset.course = JSON.stringify(course);
+                        this.querySelector('div:last-child').textContent = room.id;
+                        selector.remove();
+                        checkConflictsForTimeSlot(slot.dataset.time);
+                    });
+                } else {
+                    option.classList.add('occupied');
+                    option.innerHTML = `✗ ${room.name}`;
+                }
+                
+                selector.appendChild(option);
+            });
+            
+            this.appendChild(selector);
+            
+            // Dışarı tıklanınca kapat
+            setTimeout(() => {
+                document.addEventListener('click', function closeSelector(e) {
+                    if (!selector.contains(e.target)) {
+                        selector.remove();
+                        document.removeEventListener('click', closeSelector);
+                    }
+                });
+            }, 100);
+        }
+        
+        // Uygun derslikleri bul
+        function getAvailableRooms(day, time, duration) {
+            const available = classrooms.map(c => c.id);
+            
+            // Tüm yerleştirilmiş dersleri kontrol et
+            Object.keys(placedCourses).forEach(key => {
+                const [program, courseDay, courseTime] = key.split('-');
+                const course = placedCourses[key];
+                
+                if (courseDay === day) {
+                    const cTime = parseInt(courseTime);
+                    const tTime = parseInt(time);
+                    
+                    // Zaman çakışması kontrolü
+                    if ((tTime >= cTime && tTime < cTime + course.duration) ||
+                        (cTime >= tTime && cTime < tTime + duration)) {
+                        // Bu derslik meşgul
+                        const index = available.indexOf(course.room);
+                        if (index > -1) {
+                            available.splice(index, 1);
+                        }
+                    }
+                }
+            });
+            
+            return available;
+        }
+        
+        // Çakışma kontrolü
+        function checkConflictsForTimeSlot(timeIndex) {
+            const conflictList = [];
+            const timeConflicts = {};
+            
+            // Zaman dilimindeki tüm dersleri topla
+            Object.keys(placedCourses).forEach(key => {
+                const [program, day, time] = key.split('-');
+                const course = placedCourses[key];
+                
+                if (time === timeIndex) {
+                    const teacherKey = `${day}-${time}-${course.teacher}`;
+                    const roomKey = `${day}-${time}-${course.room}`;
+                    
+                    // Öğretmen çakışması
+                    if (!timeConflicts[teacherKey]) {
+                        timeConflicts[teacherKey] = [];
+                    }
+                    timeConflicts[teacherKey].push({program, course});
+                    
+                    // Derslik çakışması
+                    if (!timeConflicts[roomKey]) {
+                        timeConflicts[roomKey] = [];
+                    }
+                    timeConflicts[roomKey].push({program, course});
+                }
+            });
+            
+            // Çakışmaları tespit et
+            Object.keys(timeConflicts).forEach(key => {
+                if (timeConflicts[key].length > 1) {
+                    const [day, time, resource] = key.split('-');
+                    
+                    if (resource.length <= 3) { // Öğretmen kodu
+                        conflictList.push({
+                            type: 'teacher',
+                            resource: resource,
+                            day: days[day],
+                            time: timeSlots[time],
+                            courses: timeConflicts[key]
+                        });
+                    }
+                }
+            });
+            
+            // Çakışmaları işaretle
+            document.querySelectorAll('.placed-course').forEach(el => {
+                el.classList.remove('conflict');
+                const indicator = el.querySelector('.conflict-indicator');
+                if (indicator) indicator.remove();
+            });
+            
+            conflictList.forEach(conflict => {
+                conflict.courses.forEach(item => {
+                    const slot = document.querySelector(
+                        `.course-slot[data-program="${item.program}"][data-day="${days.indexOf(conflict.day)}"][data-time="${timeSlots.indexOf(conflict.time)}"]`
+                    );
+                    
+                    if (slot) {
+                        const courseEl = slot.querySelector('.placed-course');
+                        if (courseEl) {
+                            courseEl.classList.add('conflict');
+                            
+                            if (!courseEl.querySelector('.conflict-indicator')) {
+                                const indicator = document.createElement('div');
+                                indicator.className = 'conflict-indicator';
+                                indicator.textContent = '!';
+                                courseEl.appendChild(indicator);
+                            }
+                        }
+                    }
+                });
+            });
+            
+            conflicts = conflictList;
+            updateStats();
+        }
+        
+        // Tüm çakışmaları kontrol et
+        function checkAllConflicts() {
+            const allConflicts = [];
+            const checked = {};
+            
+            Object.keys(placedCourses).forEach(key => {
+                const [program, day, time] = key.split('-');
+                const course = placedCourses[key];
+                
+                Object.keys(placedCourses).forEach(key2 => {
+                    if (key === key2) return;
+                    
+                    const [program2, day2, time2] = key2.split('-');
+                    const course2 = placedCourses[key2];
+                    
+                    // Aynı gün ve örtüşen zaman kontrolü
+                    if (day === day2) {
+                        const t1Start = parseInt(time);
+                        const t1End = t1Start + course.duration;
+                        const t2Start = parseInt(time2);
+                        const t2End = t2Start + course2.duration;
+                        
+                        if ((t1Start < t2End && t1End > t2Start)) {
+                            // Öğretmen çakışması
+                            if (course.teacher === course2.teacher) {
+                                const conflictKey = `teacher-${course.teacher}-${day}-${Math.min(t1Start, t2Start)}`;
+                                
+                                if (!checked[conflictKey]) {
+                                    allConflicts.push({
+                                        type: 'Öğretmen',
+                                        resource: course.teacher,
+                                        day: days[day],
+                                        time: `${timeSlots[Math.min(t1Start, t2Start)]}`,
+                                        programs: [program, program2],
+                                        courses: [course.name, course2.name]
+                                    });
+                                    checked[conflictKey] = true;
+                                }
+                            }
+                            
+                            // Derslik çakışması
+                            if (course.room === course2.room) {
+                                const conflictKey = `room-${course.room}-${day}-${Math.min(t1Start, t2Start)}`;
+                                
+                                if (!checked[conflictKey]) {
+                                    allConflicts.push({
+                                        type: 'Derslik',
+                                        resource: course.room,
+                                        day: days[day],
+                                        time: `${timeSlots[Math.min(t1Start, t2Start)]}`,
+                                        programs: [program, program2],
+                                        courses: [course.name, course2.name]
+                                    });
+                                    checked[conflictKey] = true;
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Çakışmaları göster
+            if (allConflicts.length > 0) {
+                showConflictPanel(allConflicts);
+            } else {
+                alert('✅ Hiçbir çakışma bulunamadı!');
+            }
+        }
+        
+        // Çakışma panelini göster
+        function showConflictPanel(conflicts) {
+            const panel = document.getElementById('conflictPanel');
+            const list = document.getElementById('conflictList');
+            
+            list.innerHTML = '';
+            
+            conflicts.forEach(conflict => {
+                const item = document.createElement('div');
+                item.className = 'conflict-item';
+                item.innerHTML = `
+                    <strong>${conflict.type} Çakışması:</strong> ${conflict.resource}<br>
+                    <strong>Gün/Saat:</strong> ${conflict.day} ${conflict.time}<br>
+                    <strong>Programlar:</strong> ${conflict.programs.join(' - ')}<br>
+                    <strong>Dersler:</strong> ${conflict.courses.join(' - ')}
+                `;
+                list.appendChild(item);
+            });
+            
+            panel.classList.add('active');
+        }
+        
+        // Çakışma panelini kapat
+        function closeConflictPanel() {
+            document.getElementById('conflictPanel').classList.remove('active');
+        }
+        
+        // İstatistikleri güncelle
+        function updateStats() {
+            const totalCourses = sampleCourses.length;
+            const placedCount = Object.keys(placedCourses).length;
+            const waitingCount = document.querySelectorAll('.unassigned-courses .course-card').length;
+            
+            document.getElementById('totalCourses').textContent = totalCourses;
+            document.getElementById('placedCourses').textContent = placedCount;
+            document.getElementById('waitingCourses').textContent = waitingCount;
+            document.getElementById('conflictCount').textContent = conflicts.length;
+        }
+        
+        // Programı kaydet
+        function saveSchedule() {
+            const scheduleData = {
+                placed: placedCourses,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('schedule', JSON.stringify(scheduleData));
+            alert('✅ Program başarıyla kaydedildi!');
+        }
+        
+        // Programı dışa aktar
+        function exportSchedule() {
+            const data = {
+                programs: programs,
+                courses: placedCourses,
+                conflicts: conflicts
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ders-programi.json';
+            a.click();
+        }
+        
+        // Sıfırla
+        function resetAll() {
+            if (confirm('Tüm yerleşimi sıfırlamak istediğinizden emin misiniz?')) {
+                placedCourses = {};
+                conflicts = [];
+                
+                // Yerleştirilmiş dersleri temizle
+                document.querySelectorAll('.placed-course').forEach(el => {
+                    el.remove();
+                });
+                
+                document.querySelectorAll('.course-slot').forEach(slot => {
+                    slot.classList.remove('occupied');
+                });
+                
+                // Dersleri yeniden yükle
+                loadUnassignedCourses();
+                updateStats();
+            }
+        }
+    </script>
+</body>
+</html>
