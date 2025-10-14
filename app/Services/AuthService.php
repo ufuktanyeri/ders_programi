@@ -1,9 +1,10 @@
 <?php
 
-require_once '../app/Models/UserModel.php';
-require_once '../app/Entities/User.php';
+namespace App\Services;
 
+use App\Models\UserModel;
 use App\Entities\User;
+use PDO;
 
 class AuthService {
     private $db;

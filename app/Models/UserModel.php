@@ -1,8 +1,9 @@
 <?php
 
-require_once '../app/Entities/User.php';
+namespace App\Models;
 
 use App\Entities\User;
+use PDO;
 
 class UserModel {
     private $db;

@@ -1,9 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../../core/Controller.php';
-require_once __DIR__ . '/../Services/AuthService.php';
-require_once __DIR__ . '/../Middleware/AuthMiddleware.php';
-require_once __DIR__ . '/../Models/UserModel.php';
+use App\Services\AuthService;
+use App\Middleware\AuthMiddleware;
+use App\Models\UserModel;
 
 class DashboardController extends Controller {
     private $authService;

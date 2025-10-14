@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Middleware;
+
+use PDO;
+
 class AuthMiddleware {
     private $db;
 
