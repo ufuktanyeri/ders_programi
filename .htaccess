@@ -1,6 +1,8 @@
 # Main .htaccess - Root Level
 RewriteEngine On
 
-# Redirect all requests to public directory
+# Development: Forward to index.php directly (public/ will be production web root)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !^/ders_programi/public/
-RewriteRule ^(.*)$ public/$1 [L]
+RewriteRule ^(.*)$ index.php [QSA,L]
