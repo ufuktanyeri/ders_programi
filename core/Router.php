@@ -28,31 +28,58 @@ class Router {
         $path = $path ?: '/';
 
         // Debug information (only in development)
-        if (isset($_GET['debug']) && APP_DEBUG) {
+        if (isset($_GET['debug']) && defined('APP_DEBUG') && APP_DEBUG) {
             echo "DEBUG: method={$method}, original_path=" . $_SERVER['REQUEST_URI'] . ", basePath={$basePath}, final_path={$path}<br>";
             echo "Available routes: " . print_r(array_keys($this->routes[$method] ?? []), true) . "<br>";
         }
 
-        // Find matching route
+        // Try exact match first
         if (isset($this->routes[$method][$path])) {
             $this->currentRoute = $this->routes[$method][$path];
+            return $this->executeRoute($this->currentRoute);
+        }
 
-            if (is_callable($this->currentRoute)) {
-                return call_user_func($this->currentRoute);
-            }
+        // Try dynamic route matching
+        if (isset($this->routes[$method])) {
+            foreach ($this->routes[$method] as $route => $callback) {
+                // Convert route pattern to regex
+                // {param} becomes ([^/]+)
+                $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '([^/]+)', $route);
+                $pattern = '#^' . $pattern . '$#';
 
-            if (is_array($this->currentRoute)) {
-                [$controller, $method] = $this->currentRoute;
-
-                if (is_string($controller)) {
-                    $controller = new $controller();
+                if (preg_match($pattern, $path, $matches)) {
+                    // Remove the full match
+                    array_shift($matches);
+                    
+                    $this->currentRoute = $callback;
+                    return $this->executeRoute($callback, $matches);
                 }
-
-                return $controller->$method();
             }
         }
 
         // 404 Not Found
+        $this->handle404();
+    }
+
+    private function executeRoute($callback, $params = []) {
+        if (is_callable($callback)) {
+            return call_user_func_array($callback, $params);
+        }
+
+        if (is_array($callback)) {
+            [$controller, $method] = $callback;
+
+            if (is_string($controller)) {
+                $controller = new $controller();
+            }
+
+            return call_user_func_array([$controller, $method], $params);
+        }
+
+        return null;
+    }
+
+    private function handle404() {
         http_response_code(404);
 
         $possiblePaths = [
@@ -69,7 +96,9 @@ class Router {
         }
 
         // Fallback 404
-        echo "<h1>404 - Page Not Found</h1><p>The requested page could not be found.</p>";
+        echo "<h1>404 - Page Not Found</h1>";
+        echo "<p>The requested page <code>" . htmlspecialchars($_SERVER['REQUEST_URI']) . "</code> could not be found.</p>";
+        echo "<p><a href='/'>Return to Home</a></p>";
     }
 
     public function redirect($path) {

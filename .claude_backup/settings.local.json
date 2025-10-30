@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(phpstan:*)",
+      "Bash(php:*)",
+      "Bash(composer --version)",
+      "Bash(composer init:*)",
+      "Bash(composer require:*)",
+      "Bash(./vendor/bin/phpstan analyse *.php --level=5)",
+      "Bash(./vendor/bin/phpstan analyse *.php --level=3)",
+      "Bash(./vendor/bin/phpstan analyse:*)",
+      "Bash(mysql:*)",
+      "Bash(curl:*)",
+      "Read(//c/xampp/apache/conf/extra/**)",
+      "Read(//c/xampp/apache/conf/**)",
+      "Bash(powershell:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

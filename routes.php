@@ -6,6 +6,8 @@ require_once 'bootstrap.php';
 require_once 'app/Controllers/HomeController.php';
 require_once 'app/Controllers/AuthController.php';
 require_once 'app/Controllers/DashboardController.php';
+require_once 'app/Controllers/ProgramController.php';
+require_once 'app/Controllers/ScheduleController.php';
 
 // Home routes
 $router->get('/', [HomeController::class, 'index']);
@@ -14,6 +16,15 @@ $router->get('/dashboard', [HomeController::class, 'dashboard']);
 $router->get('/legacy', [HomeController::class, 'legacy']);
 $router->get('/about', [HomeController::class, 'about']);
 $router->get('/contact', [HomeController::class, 'contact']);
+$router->get('/help', [HomeController::class, 'help']);
+
+// Program routes
+$router->get('/programs', [ProgramController::class, 'index']);
+$router->get('/program/{code}', [ProgramController::class, 'show']);
+
+// Schedule routes
+$router->get('/schedules', [ScheduleController::class, 'index']);
+$router->get('/schedule/{code}', [ScheduleController::class, 'show']);
 
 // Authentication routes
 $router->get('/auth/login', [AuthController::class, 'loginForm']);

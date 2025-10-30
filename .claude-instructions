@@ -1,0 +1,104 @@
+# CLAUDE CODE İÇİN TALİMATLAR
+
+## Her Oturum Başında Yapılacaklar:
+1. `.claude/memory/CURRENT_SESSION.md` dosyasını oku
+2. `.claude/context/PROJECT_CONTEXT.md` dosyasını oku
+3. `.claude/memory/TASK_TRACKER.md` dosyasını kontrol et
+4. Son çalışılan dosyaları incele
+
+## Kod Yazım Kuralları:
+- Tüm yorumlar Türkçe olmalı
+- Her fonksiyon için JSDoc/PHPDoc kullan
+- Try-catch blokları zorunlu
+- `var_dump()` ve `console.log()` debug için kullan
+- SQL injection koruması için PDO prepared statements kullan
+
+## Dosya Güncelleme Protokolü:
+- Her önemli değişiklikte `CURRENT_SESSION.md` güncelle
+- Yeni özellik eklendiğinde `PROJECT_CONTEXT.md` güncelle
+- Database değişikliklerini `DATABASE_SCHEMA.md`'ye kaydet (gelecekte oluşturulacak)
+- Tamamlanan görevleri `TASK_TRACKER.md`'de işaretle
+
+## Commit Mesaj Formatı:
+```
+[emoji] [tip]: [kısa açıklama]
+
+Örnekler:
+✨ feat: kullanıcı giriş sistemi eklendi
+🐛 fix: form validasyon hatası düzeltildi
+📝 docs: API dokümantasyonu güncellendi
+🎨 style: kod formatı düzenlendi
+♻️ refactor: veritabanı bağlantısı yeniden yazıldı
+🔧 config: .env dosyası güncellendi
+🚀 deploy: production ortamına deploy edildi
+```
+
+## Hata Durumunda:
+1. Hatayı `.claude/logs/daily/[tarih].log` dosyasına kaydet
+2. `CURRENT_SESSION.md`'de "Karşılaşılan Sorunlar" bölümüne ekle
+3. Çözüm bulunduğunda dokümante et
+
+## Proje Spesifik Kurallar:
+
+### Database-First Yaklaşım:
+- Hiçbir zaman mockup veri kullanma
+- Tüm veriler database'den gelmeli
+- Boş veri durumunda kullanıcı dostu mesajlar göster
+
+### MVC Pattern:
+- Controller'lar sadece request/response işler
+- İş mantığı Service layer'da olmalı
+- Database erişimi Repository pattern ile yapılmalı
+- View'lar sadece sunum katmanı, logic içermemeli
+
+### Routing:
+- Tüm route'lar `routes.php` dosyasında tanımlanmalı
+- RESTful convention'lara uy
+- Dynamic route'lar için `{parameter}` formatı kullan
+
+### Security:
+- Her zaman PDO prepared statements kullan
+- User input'ları `htmlspecialchars()` ile escape et
+- Session güvenliği için `session_regenerate_id()` kullan
+- CSRF token'ları implement et (gelecek özellik)
+
+### View Yapısı:
+- Tüm view'lar layout sistemi kullanmalı (`app.php` veya `modern.php`)
+- Output buffering ile content yakalama: `ob_start()` / `ob_get_clean()`
+- Conditional rendering için empty check'ler yapılmalı
+
+### Hata Yönetimi:
+- Custom Exception sınıfları kullan (AppException, ValidationException, etc.)
+- Try-catch blokları ile hataları yakala
+- Kullanıcıya anlamlı hata mesajları göster
+- Detaylı hataları log'a yaz
+
+## Önemli Dosyalar ve Konumları:
+- **Bootstrap**: `bootstrap.php` - Uygulama başlatma
+- **Routes**: `routes.php` - Tüm URL tanımları
+- **Config**: `config/` - Veritabanı, OAuth, helper'lar
+- **Controllers**: `app/Controllers/` - Request işleyiciler
+- **Models**: `app/Models/` - Veri modelleri
+- **Repositories**: `app/Repositories/` - Database erişim
+- **Services**: `app/Services/` - İş mantığı
+- **Views**: `app/Views/` - Sunum katmanı
+- **Database**: `database/` - SQL dosyaları
+
+## Development Workflow:
+1. Task'ı `TASK_TRACKER.md`'ye ekle
+2. Gerekli dosyaları oluştur/düzenle
+3. Test et
+4. `CURRENT_SESSION.md` güncelle
+5. Task'ı tamamlandı olarak işaretle
+6. Commit yap
+
+## Testing:
+- XAMPP'te Apache başlat
+- Browser'da test et: `http://localhost/ders_programi/`
+- Her route'u manuel test et
+- Error durumlarını test et
+
+## Bakım:
+- Haftalık: Session history'de 30 günden eski dosyaları arşivle
+- Aylık: `.claude` klasörünü yedekle
+- Her önemli değişiklikten sonra: Git commit yap

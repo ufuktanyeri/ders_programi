@@ -18,5 +18,5 @@ $content = ob_start(); ?>
 <?php
 $content = ob_get_clean();
 $title = "404 - Sayfa Bulunamadı";
-include "../app/Views/layouts/app.php";
+include __DIR__ . '/../layouts/app.php';
 ?>

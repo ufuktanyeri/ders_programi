@@ -207,8 +207,8 @@ $content = ob_start(); ?>
 </section>
 <?php endif; ?>
 
-<!-- Announcements Section -->
-<?php if (!empty($announcements)): ?>
+<!-- Announcements Section - Database'den gelecek -->
+<?php if (!empty($announcements) && is_array($announcements) && count($announcements) > 0): ?>
 <section class="py-5">
     <div class="container">
         <div class="row text-center mb-5">

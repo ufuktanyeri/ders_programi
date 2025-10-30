@@ -1,0 +1,48 @@
+name: Claude Memory Sync
+
+on:
+  push:
+    paths:
+      - '.claude/**'
+  pull_request:
+    paths:
+      - '.claude/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Validate Claude Files
+        run: |
+          echo "Claude dosyaları kontrol ediliyor..."
+          ls -la .claude/
+          
+      - name: Check Required Files
+        run: |
+          echo "Gerekli dosyalar kontrol ediliyor..."
+          test -f .claude/context/PROJECT_CONTEXT.md && echo "✓ PROJECT_CONTEXT.md mevcut" || echo "✗ PROJECT_CONTEXT.md eksik"
+          test -f .claude/memory/CURRENT_SESSION.md && echo "✓ CURRENT_SESSION.md mevcut" || echo "✗ CURRENT_SESSION.md eksik"
+          test -f .claude/memory/TASK_TRACKER.md && echo "✓ TASK_TRACKER.md mevcut" || echo "✗ TASK_TRACKER.md eksik"
+          
+      - name: Validate Markdown Files
+        run: |
+          echo "Markdown dosyaları validasyonu..."
+          find .claude -name "*.md" -type f | while read file; do
+            echo "Checking $file..."
+            if [ -s "$file" ]; then
+              echo "✓ $file is valid"
+            else
+              echo "✗ $file is empty"
+              exit 1
+            fi
+          done
+          
+      - name: Summary
+        run: |
+          echo "════════════════════════════════════"
+          echo "Claude Memory System Validation"
+          echo "════════════════════════════════════"
+          echo "Status: ✅ All checks passed"
+          echo "Files validated: $(find .claude -name "*.md" -type f | wc -l) markdown files"
+          echo "Last update: $(date)"

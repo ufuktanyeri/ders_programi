@@ -52,34 +52,15 @@ class HomeController extends Controller {
 
     public function legacy() {
         // Legacy ana sayfa işlevselliği
-        $announcements = [
-            [
-                'title' => 'Güz Dönemi Ders Programları Yayınlandı',
-                'content' => '2024-2025 Güz dönemi ders programları öğrenci ve öğretim elemanlarının erişimine sunulmuştur.',
-                'date' => '2024-09-15',
-                'type' => 'info'
-            ],
-            [
-                'title' => 'Sistem Bakım Bildirimi',
-                'content' => '25 Eylül Çarşamba günü 02:00-04:00 saatleri arasında sistem bakım nedeniyle erişilemeyecektir.',
-                'date' => '2024-09-20',
-                'type' => 'warning'
-            ],
-            [
-                'title' => 'Yeni Özellikler Eklendi',
-                'content' => 'Google OAuth entegrasyonu ve yetki yönetim sistemi devreye alınmıştır.',
-                'date' => '2024-09-25',
-                'type' => 'success'
-            ]
-        ];
-
-        // Program listesi
-        $programs = $this->db->query("SELECT program_kodu, program_adi FROM programlar WHERE aktif = TRUE ORDER BY program_kodu LIMIT 6")->fetchAll();
+        // Program listesi database'den gelir
+        $programs = $this->programService->getActivePrograms();
+        $stats = $this->statisticsService->getSystemStatistics();
 
         $this->view('home/index', [
-            'title' => 'Ana Sayfa',
-            'announcements' => $announcements,
-            'programs' => $programs
+            'title' => 'Ana Sayfa - Ders Programı Sistemi',
+            'programs' => $programs,
+            'stats' => $stats,
+            'announcements' => [] // Mockup veri kaldırıldı - database'den gelecek
         ]);
     }
 
@@ -92,6 +73,12 @@ class HomeController extends Controller {
     public function contact() {
         $this->view('home/contact', [
             'title' => 'İletişim'
+        ]);
+    }
+
+    public function help() {
+        $this->view('home/help', [
+            'title' => 'Yardım'
         ]);
     }
 }

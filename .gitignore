@@ -1,0 +1,69 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+/vendor/
+composer.lock
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+/storage/logs/*.log
+*.log
+
+# Cache
+/storage/cache/*
+!storage/cache/.gitkeep
+
+# Archived files (optional - uncomment if you don't want to track)
+# /_archived/
+
+# Google OAuth credentials
+client_secret_*.json
+credentials.json
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Build artifacts
+/dist/
+/build/
+/public/build/
+
+# Node modules (if using frontend build tools)
+/node_modules/
+package-lock.json
+yarn.lock
+
+# PHPUnit
+.phpunit.result.cache
+/coverage/
+
+# Database
+*.sql.gz
+*.sql.bak
+dump-*.sql
+
+# Media uploads (if any)
+/public/uploads/*
+!public/uploads/.gitkeep

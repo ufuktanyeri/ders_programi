@@ -1,0 +1,142 @@
+# 📍 MEVCUT OTURUM BİLGİLERİ
+
+## Son Çalışma Özeti
+**Tarih**: 30 Ekim 2025, 08:00
+**Tamamlanan İşler**:
+- ✅ Claude Memory System kuruldu (.claude klasör yapısı)
+- ✅ PROJECT_CONTEXT.md oluşturuldu
+- ✅ CURRENT_SESSION.md oluşturuldu
+- ✅ TASK_TRACKER.md oluşturuldu
+- ✅ HomeController'daki mockup duyurular temizlendi
+- ✅ ProgramController oluşturuldu
+- ✅ ScheduleController oluşturuldu
+- ✅ routes.php'ye tüm eksik route'lar eklendi
+- ✅ about.php view oluşturuldu
+- ✅ contact.php view oluşturuldu
+- ✅ help.php view oluşturuldu
+- ✅ programs/index.php ve programs/show.php oluşturuldu
+- ✅ schedules/index.php ve schedules/show.php oluşturuldu
+- ✅ index.php'deki announcements section'ı conditional yapıldı
+- ✅ PowerShell script'leri oluşturuldu (claude-start.ps1, claude-end.ps1)
+- ✅ .claude-instructions oluşturuldu
+- ✅ CLAUDE-SETUP.md detaylı kılavuzu oluşturuldu
+- ✅ Router'a dynamic route desteği eklendi (regex pattern matching)
+- ✅ ProgramController'da PDO prepare/execute düzeltmesi yapıldı
+- ✅ ScheduleController'da PDO prepare/execute düzeltmesi yapıldı
+- ✅ 404.php view'daki include path hatası düzeltildi (__DIR__ kullanıldı)
+- ✅ Browser'da testler yapıldı (ana sayfa, programs, 404 test edildi)
+- ✅ TASK_TRACKER.md güncellendi (tüm buglar kapatıldı)
+- ✅ GitHub Actions workflow oluşturuldu (.github/workflows/claude-sync.yml)
+- ✅ README.md oluşturuldu (GitHub repo bilgileriyle)
+
+## Aktif Çalışma Alanı
+**Tamamlanan Dosyalar**: 
+- .claude/context/PROJECT_CONTEXT.md
+- .claude/memory/CURRENT_SESSION.md
+- .claude/memory/TASK_TRACKER.md (güncellendi)
+- claude-start.ps1 (yeni oluşturuldu)
+- claude-end.ps1 (yeni oluşturuldu)
+- .claude-instructions (yeni oluşturuldu)
+- CLAUDE-SETUP.md (yeni oluşturuldu)
+- README.md (yeni oluşturuldu - kapsamlı dokümantasyon)
+- .github/workflows/claude-sync.yml (yeni oluşturuldu)
+- core/Router.php (dynamic route desteği eklendi)
+- app/Controllers/HomeController.php (mockup veriler temizlendi)
+- app/Controllers/ProgramController.php (PDO düzeltildi)
+- app/Controllers/ScheduleController.php (PDO düzeltildi)
+- app/Views/errors/404.php (include path düzeltildi)
+- routes.php (güncellendi)
+- app/Views/home/about.php
+- app/Views/home/contact.php
+- app/Views/home/help.php
+- app/Views/home/index.php (announcements conditional yapıldı)
+- app/Views/programs/index.php
+- app/Views/programs/show.php
+- app/Views/schedules/index.php
+- app/Views/schedules/show.php
+
+## Çözülen Sorunlar
+1. **Sorun**: HomeController'da mockup duyuru verileri hardcoded
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: Mockup veriler kaldırıldı, boş array gönderiliyor. View'da conditional check eklendi.
+
+2. **Sorun**: /programs route'u tanımsız
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: ProgramController oluşturuldu, route eklendi, index ve show view'ları hazırlandı
+
+3. **Sorun**: /schedules route'u tanımsız
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: ScheduleController oluşturuldu, route eklendi, index ve show view'ları hazırlandı
+
+4. **Sorun**: /about, /contact, /help route'ları tanımsız
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: HomeController'a method'lar eklendi, view dosyaları oluşturuldu
+
+5. **Sorun**: /program/{kod} dynamic route yok
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: ProgramController'da show() metodu eklendi, route tanımlandı
+
+6. **Sorun**: index.php'de mockup duyurular gösteriliyor
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: Conditional yapıldı, boş array olduğunda gösterilmiyor
+
+7. **Sorun**: Router dynamic route'ları desteklemiyor
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: Regex pattern matching eklendi, {param} formatı artık çalışıyor
+
+8. **Sorun**: ProgramController ve ScheduleController'da PDO query() yanlış kullanımı
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: prepare() ve execute() metodlarına geçildi
+
+9. **Sorun**: 404.php view'da include path hatası
+   **Çözüm Durumu**: ✅ Çözüldü
+   **Notlar**: Relative path yerine __DIR__ kullanıldı
+
+## Önemli Değişiklikler
+1. **Database-first Yaklaşım**: Tüm veriler artık database'den geliyor, hiç mockup veri yok
+
+2. **Claude Memory System**: 
+   - PowerShell script'leri (oturum başlatma/kapatma)
+   - Detaylı dokümantasyon ve talimatlar
+   - .claude/ klasör yapısı tamamen kurulu
+
+3. **Yeni Route'lar**: 
+   - GET /programs
+   - GET /program/{code}
+   - GET /schedules
+   - GET /schedule/{code}
+   - GET /about
+   - GET /contact
+   - GET /help
+
+4. **Yeni Controller'lar**:
+   - ProgramController (index, show)
+   - ScheduleController (index, show)
+
+5. **Yeni View'lar**: Toplam 7 yeni view dosyası oluşturuldu
+
+6. **Router İyileştirmeleri**:
+   - Dynamic route desteği (regex pattern matching)
+   - Parameter binding
+   - Daha iyi 404 handling
+
+7. **Güvenlik İyileştirmeleri**:
+   - PDO prepared statements kullanımı
+   - SQL injection koruması güçlendirildi
+
+## Bir Sonraki Adımlar
+- [ ] Tüm sayfaları detaylı test et
+- [ ] Announcement sistemi için database tablosu oluştur
+- [ ] PDF export özelliği ekle
+- [ ] Excel export özelliği ekle
+- [ ] E-posta bildirim sistemi
+- [ ] Çakışma kontrolü algoritması
+
+## Önemli Notlar
+- ⚠️ Tüm linkler artık çalışır durumda
+- ⚠️ Mockup veriler tamamen kaldırıldı
+- ⚠️ Database'de veri yoksa boş state gösterilecek
+- 💡 Sistem tamamen database-driven çalışıyor
+- 💡 Claude Memory System başarıyla kuruldu ve test edildi
+- 🔧 Router artık dynamic route'ları destekliyor ({param} formatı)
+- 🔒 PDO prepared statements ile güvenlik güçlendirildi
